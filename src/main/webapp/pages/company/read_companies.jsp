@@ -23,7 +23,8 @@
             </tr>
         </core:forEach>
 
-         <button onclick="window.location='exit'">Exit</button>
+         <input type=button value="Back" onCLick="history.back()">
+         <button onclick="window.location='/environment-application/exit'">Exit</button>
         </tbody>
     </table>
 </body>

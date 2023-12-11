@@ -17,6 +17,7 @@
             <tr>
                 <td><input type = "text" name = "name" placeholder = "type company name"></td>
                 <td><input type = "text" name = "details" placeholder = "type company details"></td>
+                <td><input type = "submit" value = "Create"></td>
             </tr>
         </form>
         </tbody>
