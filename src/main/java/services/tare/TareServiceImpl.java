@@ -43,4 +43,9 @@ public class TareServiceImpl implements TareService {
     public boolean delete(final UUID id) {
         return tareRepository.delete(id);
     }
+
+    @Override
+    public Tare getById(final UUID id) {
+        return tareRepository.getById(id).orElseThrow(() -> new TareServiceException("This coupon doesn't exist"));
+    }
 }

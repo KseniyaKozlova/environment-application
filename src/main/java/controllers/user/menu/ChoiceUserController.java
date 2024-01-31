@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import static util.Constants.*;
 
-@WebServlet(urlPatterns = "/choice")
+@WebServlet(urlPatterns = CHOICE_URL)
 public class ChoiceUserController extends HttpServlet {
 
     @Override

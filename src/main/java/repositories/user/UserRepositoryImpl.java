@@ -1,22 +1,24 @@
 package repositories.user;
 
 import entities.User;
-import enums.Role;
+import util.JPAUtil;
 
-import java.util.*;
-
-import static java.util.UUID.randomUUID;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class UserRepositoryImpl implements UserRepository {
 
     private static UserRepository userRepository;
-    private final List<User> users;
-
-    {
-        users = new ArrayList<>();
-        users.add(new User(randomUUID(), "post1", "password1", "Igor", 0, Role.ADMINISTRATOR));
-        users.add(new User(UUID.fromString("55b77255-0771-4578-8226-3de0d4da69ec"), "post2", "password2", "Ivan", 0, Role.APPLICATION_MODERATOR));
-    }
+    private final EntityManager entityManager = JPAUtil.getEntityManager();
+    private final EntityTransaction transaction = entityManager.getTransaction();
 
     private UserRepositoryImpl() {
     }
@@ -27,12 +29,26 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User create(final User user) {
-        user.setId(randomUUID());
-        users.add(user);
+        transaction.begin();
+
+        entityManager.persist(user);
+
+        transaction.commit();
+
         return user;
     }
 
     public List<User> read() {
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> userRoot = userCriteriaQuery.from(User.class);
+        userCriteriaQuery.select(userRoot);
+        final List<User> users = entityManager.createQuery(userCriteriaQuery).getResultList();
+
+        transaction.commit();
+
         return users;
     }
 
@@ -43,21 +59,38 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> getUserByLogin(final String login) {
-        return users.stream()
-                .filter(user -> user.getLogin().equals(login))
-                .findAny();
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> userRoot = userCriteriaQuery.from(User.class);
+        userCriteriaQuery.select(userRoot).where(criteriaBuilder.equal(userRoot.get("LOGIN"), login));
+        final User user = entityManager.createQuery(userCriteriaQuery)
+                .getSingleResult();
+
+        transaction.commit();
+
+        return Optional.ofNullable(user);
     }
 
     @Override
     public boolean delete(final UUID id) {
-        Optional<User> userOptional = getById(id);
-        return userOptional.map(users::remove)
-                .orElse(false);
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaDelete<User> userCriteriaDelete = criteriaBuilder.createCriteriaDelete(User.class);
+        final Root<User> userRoot = userCriteriaDelete.from(User.class);
+        userCriteriaDelete.where(criteriaBuilder.equal(userRoot.get("id"), id));
+        final int executeUpdate = entityManager.createQuery(userCriteriaDelete).executeUpdate();
+
+        transaction.commit();
+
+        return executeUpdate > 0;
     }
 
-    private Optional<User> getById(UUID id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst();
+    @Override
+    public Optional<User> getById(UUID id) {
+        final User user = entityManager.find(User.class, id);
+        return Optional.ofNullable(user);
     }
 }

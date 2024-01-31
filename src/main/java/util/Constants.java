@@ -17,6 +17,9 @@ public class Constants {
     public static final String ADMIN_MENU_PAGE = "/pages/user/menu/admin_menu.jsp";
     public static final String USER_REGISTRATION_PAGE = "/pages/user/enter/user_registration.jsp";
     public static final String USERS_READ_PAGE = "/pages/user/users_read.jsp";
+    public static final String USER_USE_COUPON_PAGE = "/pages/user/user_coupon_use.jsp";
+    public static final String USER_BUY_COUPON_PAGE = "/pages/user/user_coupon_buy.jsp";
+    public static final String USER_DEPOSIT_TARE_PAGE = "/pages/user/users_tare_deposit.jsp";
     public static final String START_PAGE = "/index.jsp";
     public static final String TARE_DELETE_PAGE = "/pages/tare/tare_deleted.jsp";
     public static final String TARE_CREATE_PAGE = "/pages/tare/tare_create.jsp";
@@ -51,10 +54,14 @@ public class Constants {
     public static final String USERS_READ_URL = "/users/read";
     public static final String USERS_UPDATE_URL = "/users/update";
     public static final String USERS_DELETE_URL = "/users/delete";
+    public static final String USERS_USE_COUPON_URL = "/users/useCoupon";
+    public static final String USERS_BUY_COUPON_URL = "/users/buyCoupon";
+    public static final String USERS_DEPOSIT_TARE_URL = "/users/depositTare";
     public static final String COMPANIES_READ_URL = "/companies/read";
     public static final String COMPANIES_CREATE_URL = "/companies/create";
     public static final String REGISTRATION_URL = "/registration";
     public static final String AUTHENTICATION_URL = "/authentication";
+    public static final String CHOICE_URL = "/choice";
     public static final String EXIT_URL = "/exit";
 
     /**
@@ -65,6 +72,7 @@ public class Constants {
     public static final String USERS_ATTRIBUTE = "users";
     public static final String USER_ATTRIBUTE = "user";
     public static final String COMPANY_ATTRIBUTE = "companies";
+    public static final String USER_ID_ATTRIBUTE = "userId";
 
     /**
      * Parameters
@@ -92,4 +100,9 @@ public class Constants {
      * Count
      */
     public static final Integer ZERO = 0;
+
+    /**
+     * Regex
+     */
+    public static final String EMAIL_REGEX = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 }

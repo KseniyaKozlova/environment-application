@@ -1,22 +1,25 @@
 package repositories.tare;
 
 import entities.Tare;
-import enums.TareCategory;
+import entities.User;
+import util.JPAUtil;
 
-import java.util.*;
-
-import static java.util.UUID.randomUUID;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class TareRepositoryImpl implements TareRepository {
 
     private static TareRepository tareRepository;
-    private final List<Tare> tares;
-
-    {
-        tares = new ArrayList<>();
-        tares.add(new Tare(UUID.fromString("55b77255-0771-4578-8226-3de0d4da69ec"), TareCategory.GLASS_BOTTLE, 0.5, 30));
-        tares.add(new Tare(randomUUID(), TareCategory.PLASTIC_BOTTLE, 1.0, 30));
-    }
+    private final EntityManager entityManager = JPAUtil.getEntityManager();
+    private final EntityTransaction transaction = entityManager.getTransaction();
 
     private TareRepositoryImpl() {
     }
@@ -27,13 +30,27 @@ public class TareRepositoryImpl implements TareRepository {
 
     @Override
     public Tare create(final Tare tare) {
-        tare.setId(randomUUID());
-        tares.add(tare);
+        transaction.begin();
+
+        entityManager.persist(tare);
+
+        transaction.commit();
+
         return tare;
     }
 
     @Override
     public List<Tare> read() {
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Tare> tareCriteriaQuery = criteriaBuilder.createQuery(Tare.class);
+        final Root<Tare> tareRoot = tareCriteriaQuery.from(Tare.class);
+        tareCriteriaQuery.select(tareRoot);
+        final List<Tare> tares = entityManager.createQuery(tareCriteriaQuery).getResultList();
+
+        transaction.commit();
+
         return tares;
     }
 
@@ -44,13 +61,38 @@ public class TareRepositoryImpl implements TareRepository {
 
     @Override
     public boolean delete(final UUID id) {
-        return getById(id).map(tares::remove)
-                .orElse(false);
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaDelete<Tare> tareCriteriaDelete = criteriaBuilder.createCriteriaDelete(Tare.class);
+        final Root<Tare> tareRoot = tareCriteriaDelete.from(Tare.class);
+        tareCriteriaDelete.where(criteriaBuilder.equal(tareRoot.get("id"), id));
+        final int executeUpdate = entityManager.createQuery(tareCriteriaDelete).executeUpdate();
+
+        transaction.commit();
+
+        return executeUpdate > 0;
     }
 
-    private Optional<Tare> getById(UUID id) {
-        return tares.stream()
-                .filter(tare -> tare.getId().equals(id))
-                .findFirst();
+    @Override
+    public List<Tare> getTaresByUserId(final UUID userId) {
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Tare> tareCriteriaQuery = criteriaBuilder.createQuery(Tare.class);
+        final Root<User> userRoot = tareCriteriaQuery.from(User.class);
+        tareCriteriaQuery.select(userRoot.get("tares"))
+                .where(criteriaBuilder.equal(userRoot.get("id"), userId));
+        final List<Tare> tares = entityManager.createQuery(tareCriteriaQuery).getResultList();
+
+        transaction.commit();
+
+        return tares;
+    }
+
+    @Override
+    public Optional<Tare> getById(final UUID id) {
+        final Tare tare = entityManager.find(Tare.class, id);
+        return Optional.ofNullable(tare);
     }
 }

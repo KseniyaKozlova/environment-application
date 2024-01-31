@@ -10,6 +10,8 @@ import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static util.Constants.*;
 
@@ -17,10 +19,13 @@ import static util.Constants.*;
 public class UniqueLoginFilter extends HttpFilter {
 
     private final UserService userService = UserServiceImpl.getInstance();
+    private final Predicate<String> loginValidation = Pattern.compile(EMAIL_REGEX).asPredicate();
 
     @Override
     protected void doFilter(final HttpServletRequest req, final HttpServletResponse res, final FilterChain chain) throws IOException, ServletException {
-        if (userService.isLoginExist(req.getParameter(LOGIN))) {
+        final String login = req.getParameter(LOGIN);
+        final boolean isLoginValid = loginValidation.test(login);
+        if (userService.isLoginExist(login) || !isLoginValid) {
             req.getRequestDispatcher(LOGIN_ERROR_PAGE).forward(req, res);
         } else {
             chain.doFilter(req, res);

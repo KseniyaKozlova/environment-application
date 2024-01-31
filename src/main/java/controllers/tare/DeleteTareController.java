@@ -23,7 +23,7 @@ public class DeleteTareController extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         try {
-            UUID id = fromString(req.getParameter(ID));
+            final UUID id = fromString(req.getParameter(ID));
             tareService.delete(id);
             req.getRequestDispatcher(TARES_READ_URL).forward(req, resp);
         } catch (TareServiceException | IllegalArgumentException ex) {

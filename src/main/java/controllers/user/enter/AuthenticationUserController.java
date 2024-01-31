@@ -24,6 +24,7 @@ public class AuthenticationUserController extends HttpServlet {
         User user = userService.getUserByLogin(req.getParameter(LOGIN));
         HttpSession userSession = req.getSession();
         userSession.setAttribute(ROLE, user.getRole());
+        userSession.setAttribute("userId", user.getId());
         req.getRequestDispatcher(ADMIN_MENU_PAGE).forward(req, resp);
     }
 }

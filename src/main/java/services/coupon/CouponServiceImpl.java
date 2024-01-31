@@ -43,4 +43,9 @@ public class CouponServiceImpl implements CouponService {
     public boolean delete(final UUID id) {
         return couponRepository.delete(id);
     }
+
+    @Override
+    public Coupon getById(final UUID id) {
+        return couponRepository.getById(id).orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
+    }
 }

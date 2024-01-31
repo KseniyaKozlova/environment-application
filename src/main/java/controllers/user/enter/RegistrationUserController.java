@@ -28,6 +28,7 @@ public class RegistrationUserController extends HttpServlet {
 
         HttpSession userSession = req.getSession();
         userSession.setAttribute(ROLE, user.getRole());
+        userSession.setAttribute(USER_ID_ATTRIBUTE, user.getId());
 
         req.getRequestDispatcher(ADMIN_MENU_PAGE).forward(req, resp);
     }

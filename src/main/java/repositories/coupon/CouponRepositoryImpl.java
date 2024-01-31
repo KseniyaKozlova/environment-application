@@ -2,23 +2,26 @@ package repositories.coupon;
 
 import entities.Company;
 import entities.Coupon;
+import entities.User;
+import util.JPAUtil;
 
-import java.util.*;
-
-import static java.util.UUID.randomUUID;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class CouponRepositoryImpl implements CouponRepository {
 
     private static CouponRepository couponRepository;
-    private final List<Coupon> coupons;
+    private final EntityManager entityManager = JPAUtil.getEntityManager();
+    private final EntityTransaction transaction = entityManager.getTransaction();
 
-    {
-        final Company sosedi = new Company(randomUUID(), "Product shop Sosedi", "BIK: AKBB");
-
-        coupons = new ArrayList<>();
-        coupons.add(new Coupon(randomUUID(), "Coupon gives discount 10% in our shop", 100, sosedi));
-        coupons.add(new Coupon(randomUUID(), "You can exchange this coupon for 10 bel rubles", 200, sosedi));
-    }
 
     private CouponRepositoryImpl() {
     }
@@ -29,13 +32,27 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public Coupon create(final Coupon coupon) {
-        coupon.setId(randomUUID());
-        coupons.add(coupon);
+        transaction.begin();
+
+        entityManager.persist(coupon);
+
+        transaction.commit();
+
         return coupon;
     }
 
     @Override
     public List<Coupon> read() {
+        transaction.commit();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Coupon> couponCriteriaQuery = criteriaBuilder.createQuery(Coupon.class);
+        final Root<Coupon> couponRoot = couponCriteriaQuery.from(Coupon.class);
+        couponCriteriaQuery.select(couponRoot);
+        final List<Coupon> coupons = entityManager.createQuery(couponCriteriaQuery).getResultList();
+
+        transaction.commit();
+
         return coupons;
     }
 
@@ -46,13 +63,54 @@ public class CouponRepositoryImpl implements CouponRepository {
 
     @Override
     public boolean delete(final UUID id) {
-        return getById(id).map(coupons::remove)
-                .orElse(false);
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaDelete<Coupon> couponCriteriaDelete = criteriaBuilder.createCriteriaDelete(Coupon.class);
+        final Root<Coupon> couponRoot = couponCriteriaDelete.from(Coupon.class);
+        couponCriteriaDelete.where(criteriaBuilder.equal(couponRoot.get("id"), id));
+        final int executeUpdate = entityManager.createQuery(couponCriteriaDelete).executeUpdate();
+
+        transaction.commit();
+
+        return executeUpdate > 0;
     }
 
-    private Optional<Coupon> getById(UUID id) {
-        return coupons.stream()
-                .filter(coupon -> coupon.getId().equals(id))
-                .findFirst();
+    @Override
+    public List<Coupon> getCouponsByUserId(final UUID id) {
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Coupon> couponCriteriaQuery = criteriaBuilder.createQuery(Coupon.class);
+        final Root<User> userRoot = couponCriteriaQuery.from(User.class);
+        couponCriteriaQuery.select(userRoot.get("coupons"))
+                .where(criteriaBuilder.equal(userRoot.get("id"), id));
+        final List<Coupon> coupons = entityManager.createQuery(couponCriteriaQuery).getResultList();
+
+        transaction.commit();
+
+        return coupons;
+    }
+
+    @Override
+    public List<Coupon> getCouponsByCompanyId(final UUID companyId) {
+        transaction.begin();
+
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Coupon> couponCriteriaQuery = criteriaBuilder.createQuery(Coupon.class);
+        final Root<Company> companyRoot = couponCriteriaQuery.from(Company.class);
+        couponCriteriaQuery.select(companyRoot.get("coupons"))
+                .where(criteriaBuilder.equal(companyRoot.get("id"), companyId));
+        final List<Coupon> coupons = entityManager.createQuery(couponCriteriaQuery).getResultList();
+
+        transaction.commit();
+
+        return coupons;
+    }
+
+    @Override
+    public Optional<Coupon> getById(UUID id) {
+        final Coupon coupon = entityManager.find(Coupon.class, id);
+        return Optional.ofNullable(coupon);
     }
 }
