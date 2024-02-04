@@ -2,10 +2,10 @@ package by.itacademy.controllers.company;
 
 import by.itacademy.dto.request.CreateCompanyRequestDto;
 import by.itacademy.dto.request.UpdateCompanyRequestDto;
-import by.itacademy.entities.Company;
+import by.itacademy.dto.response.CompanyResponseDto;
+import by.itacademy.services.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import by.itacademy.services.company.CompanyService;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,22 +18,22 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping(path = "/company")
-    public Company saveCompany(@RequestBody CreateCompanyRequestDto companyRequestDto) {
+    public CompanyResponseDto saveCompany(@RequestBody CreateCompanyRequestDto companyRequestDto) {
         return companyService.saveCompany(companyRequestDto);
     }
 
     @GetMapping(path = "/company/{id}")
-    public Company getCompanyById(@PathVariable(name = "id") UUID id) {
+    public CompanyResponseDto getCompanyById(@PathVariable(name = "id") UUID id) {
         return companyService.getCompanyById(id);
     }
 
     @GetMapping(path = "/companies")
-    public List<Company> getAllCompanies() {
+    public List<CompanyResponseDto> getAllCompanies() {
         return companyService.readCompanies();
     }
 
     @PutMapping(path = "/company/update/{id}")
-    public Company updateCompany(@PathVariable(name = "id") UUID id, @RequestBody UpdateCompanyRequestDto companyRequestDto) {
+    public CompanyResponseDto updateCompany(@PathVariable(name = "id") UUID id, @RequestBody UpdateCompanyRequestDto companyRequestDto) {
         return companyService.updateCompany(id, companyRequestDto);
     }
 

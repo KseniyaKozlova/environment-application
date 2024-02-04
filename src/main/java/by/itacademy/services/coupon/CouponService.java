@@ -2,6 +2,7 @@ package by.itacademy.services.coupon;
 
 import by.itacademy.dto.request.CreateCouponRequestDto;
 import by.itacademy.dto.request.UpdateCouponRequestDto;
+import by.itacademy.dto.response.CouponResponseDto;
 import by.itacademy.entities.Coupon;
 
 import java.util.List;
@@ -9,17 +10,19 @@ import java.util.UUID;
 
 public interface CouponService {
 
-    Coupon saveCoupon(CreateCouponRequestDto couponRequestDto);
+    CouponResponseDto saveCoupon(CreateCouponRequestDto couponRequestDto);
 
-    List<Coupon> readCoupons();
+    List<CouponResponseDto> readCoupons();
 
-    Coupon updateCoupon(UUID id, UpdateCouponRequestDto couponRequestDto);
+    CouponResponseDto updateCoupon(UUID id, UpdateCouponRequestDto couponRequestDto);
 
     void deleteCoupon(UUID id);
 
-    Coupon getCouponById(UUID id);
-
 //    List<Coupon> getCouponsByUserId(UUID id);
 
-    List<Coupon> getCouponsByCompanyId(UUID companyId);
+    CouponResponseDto getById(UUID id);
+
+    List<CouponResponseDto> getCouponsByCompanyId(UUID companyId);
+
+    Coupon getCouponById(UUID id);
 }

@@ -2,7 +2,7 @@ package by.itacademy.controllers;
 
 import by.itacademy.dto.request.CreateCouponRequestDto;
 import by.itacademy.dto.request.UpdateCouponRequestDto;
-import by.itacademy.entities.Coupon;
+import by.itacademy.dto.response.CouponResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import by.itacademy.services.coupon.CouponService;
@@ -18,17 +18,17 @@ public class CouponController {
     private final CouponService couponService;
 
     @PostMapping(path = "/coupon")
-    public Coupon saveCoupon(@RequestBody CreateCouponRequestDto couponRequestDto) {
+    public CouponResponseDto saveCoupon(@RequestBody CreateCouponRequestDto couponRequestDto) {
         return couponService.saveCoupon(couponRequestDto);
     }
 
     @GetMapping(path = "/coupon/{id}")
-    public Coupon getCouponById(@PathVariable(name = "id") UUID id) {
-        return couponService.getCouponById(id);
+    public CouponResponseDto getCouponById(@PathVariable(name = "id") UUID id) {
+        return couponService.getById(id);
     }
 
     @GetMapping(path = "/coupons")
-    public List<Coupon> getAllCoupons() {
+    public List<CouponResponseDto> getAllCoupons() {
         return couponService.readCoupons();
     }
 
@@ -38,12 +38,12 @@ public class CouponController {
 //    }
 
     @GetMapping(path = "/coupons/user/{id}")
-    public List<Coupon> getCouponsByCompanyId(@PathVariable(name = "id") UUID id) {
+    public List<CouponResponseDto> getCouponsByCompanyId(@PathVariable(name = "id") UUID id) {
         return couponService.getCouponsByCompanyId(id);
     }
 
     @PutMapping(path = "/coupon/update/{id}")
-    public Coupon updateCoupon(@PathVariable(name = "id") UUID id, @RequestBody UpdateCouponRequestDto couponRequestDto) {
+    public CouponResponseDto updateCoupon(@PathVariable(name = "id") UUID id, @RequestBody UpdateCouponRequestDto couponRequestDto) {
         return couponService.updateCoupon(id, couponRequestDto);
     }
 

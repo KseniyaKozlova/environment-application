@@ -2,6 +2,7 @@ package by.itacademy.mappers;
 
 import by.itacademy.dto.request.CreateUserRequestDto;
 import by.itacademy.dto.request.UpdateUserRequestDto;
+import by.itacademy.dto.response.UserResponseDto;
 import by.itacademy.entities.User;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
@@ -17,29 +18,8 @@ public interface UserMapper {
     @Mapping(source = "bonuses", target = "bonuses", defaultExpression = "java(0)")
     User mapToUser(CreateUserRequestDto userRequestDto);
 
-//    User mapToUser(UpdateUserRequestDto userRequestDto);
+    UserResponseDto mapToUserResponse(User user);
 
     @InheritConfiguration
     void updateUser(UpdateUserRequestDto userRequestDto, @MappingTarget User user);
 }
-
-//    public User buildUserWithConsumerRole(HttpServletRequest request) {
-//        return User.builder()
-//                .login(request.getParameter(LOGIN))
-//                .password(request.getParameter(PASS))
-//                .name(request.getParameter(USER_NAME))
-//                .bonuses(ZERO)
-//                .role(CONSUMER)
-//                .build();
-//    }
-//
-//    public User buildUserWithAnyRole(HttpServletRequest request) {
-//        return User.builder()
-//                .login(request.getParameter(LOGIN))
-//                .password(request.getParameter(PASS))
-//                .name(request.getParameter(USER_NAME))
-//                .bonuses(ZERO)
-//                .role(Role.valueOf(request.getParameter(ROLE)))
-//                .build();
-//    }
-//}

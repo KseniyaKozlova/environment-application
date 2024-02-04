@@ -2,16 +2,19 @@ package by.itacademy.services.company;
 
 import by.itacademy.dto.request.CreateCompanyRequestDto;
 import by.itacademy.dto.request.UpdateCompanyRequestDto;
+import by.itacademy.dto.response.CompanyResponseDto;
 import by.itacademy.entities.Company;
-import lombok.RequiredArgsConstructor;
 import by.itacademy.mappers.CompanyMapper;
-import org.springframework.stereotype.Service;
 import by.itacademy.repositories.company.CompanyRepository;
 import by.itacademy.services.exceptions.CompanyServiceException;
 import by.itacademy.services.exceptions.CouponServiceException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -21,28 +24,34 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMapper companyMapper;
 
     @Override
-    public Company saveCompany(final CreateCompanyRequestDto companyRequestDto) {
+    public CompanyResponseDto saveCompany(final CreateCompanyRequestDto companyRequestDto) {
         final Company company = companyMapper.mapToCompany(companyRequestDto);
-        return companyRepository.save(company);
+        final Company savedCompany = companyRepository.save(company);
+        return companyMapper.mapToCompanyResponse(savedCompany);
     }
 
     @Override
-    public Company getCompanyById(final UUID id) {
-        return companyRepository.findById(id).orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
+    public CompanyResponseDto getCompanyById(final UUID id) {
+        final Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
+        return companyMapper.mapToCompanyResponse(company);
     }
 
     @Override
-    public List<Company> readCompanies() {
-        return companyRepository.findAll();
+    public List<CompanyResponseDto> readCompanies() {
+        return companyRepository.findAll().stream()
+                .map(companyMapper::mapToCompanyResponse)
+                .collect(toList());
     }
 
     @Override
-    public Company updateCompany(final UUID id, final UpdateCompanyRequestDto companyRequestDto) {
+    public CompanyResponseDto updateCompany(final UUID id, final UpdateCompanyRequestDto companyRequestDto) {
         final Company companyToUpdate = companyRepository.findById(id)
                 .orElseThrow(() -> new CompanyServiceException("This company can't be updated"));
 
         companyMapper.updateCompany(companyRequestDto, companyToUpdate);
-        return companyRepository.save(companyToUpdate);
+        final Company updatedCompany = companyRepository.save(companyToUpdate);
+        return companyMapper.mapToCompanyResponse(updatedCompany);
     }
 
     @Override

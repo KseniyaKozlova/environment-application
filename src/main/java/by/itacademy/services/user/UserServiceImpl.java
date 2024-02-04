@@ -2,6 +2,7 @@ package by.itacademy.services.user;
 
 import by.itacademy.dto.request.CreateUserRequestDto;
 import by.itacademy.dto.request.UpdateUserRequestDto;
+import by.itacademy.dto.response.UserResponseDto;
 import by.itacademy.entities.Coupon;
 import by.itacademy.entities.Tare;
 import by.itacademy.entities.User;
@@ -26,16 +27,18 @@ public class UserServiceImpl implements UserService {
     private final CouponService couponService;
 
     @Override
-    public User saveUser(CreateUserRequestDto userRequestDto) {
+    public UserResponseDto saveUser(CreateUserRequestDto userRequestDto) {
         final User user = userMapper.mapToUser(userRequestDto);
-        return userRepository.save(user);
+        final User savedUser = userRepository.save(user);
+        return userMapper.mapToUserResponse(savedUser);
     }
 
     @Override
-    public User update(final UUID id, final UpdateUserRequestDto userRequestDto) {
-        final User userToUpdate = getById(id);
+    public UserResponseDto update(final UUID id, final UpdateUserRequestDto userRequestDto) {
+        final User userToUpdate = getUserById(id);
         userMapper.updateUser(userRequestDto, userToUpdate);
-        return userRepository.save(userToUpdate);
+        final User updatedUser = userRepository.save(userToUpdate);
+        return userMapper.mapToUserResponse(updatedUser);
     }
 
     @Override
@@ -44,26 +47,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByLogin(final String login) {
-        return userRepository.getUserByLogin(login)
+    public UserResponseDto getUserByLogin(final String login) {
+        final User user = userRepository.getUserByLogin(login)
                 .orElseThrow(() -> new UserServiceException("User doesn't exist"));
+        return userMapper.mapToUserResponse(user);
     }
 
-    @Override
-    public boolean isUserPresent(final String login, final String password) {
-        return userRepository.getUserByLogin(login)
-                .map(value -> value.getPassword().equals(password))
-                .orElse(false);
-    }
+//    @Override
+//    public boolean isUserPresent(final String login, final String password) {
+//        return userRepository.getUserByLogin(login)
+//                .map(value -> value.getPassword().equals(password))
+//                .orElse(false);
+//    }
+
+//    @Override
+//    public boolean isLoginExist(final String login) {
+//        return userRepository.getUserByLogin(login).isPresent();
+//    }
 
     @Override
-    public boolean isLoginExist(final String login) {
-        return userRepository.getUserByLogin(login).isPresent();
-    }
-
-    @Override
-    public Coupon buyCoupon(final UUID userId, final UUID couponId) {
-        final User user = getById(userId);
+    public UserResponseDto buyCoupon(final UUID userId, final UUID couponId) {
+        final User user = getUserById(userId);
         final Coupon coupon = couponService.getCouponById(couponId);
 
         final Integer userBonuses = user.getBonuses();
@@ -78,8 +82,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User depositTare(final UUID userId, final UUID tareId) {
-        final User user = getById(userId);
+    public UserResponseDto depositTare(final UUID userId, final UUID tareId) {
+        final User user = getUserById(userId);
         final Tare tare = tareService.getTareById(tareId);
 
         final Integer initialBonusesAmount = user.getBonuses();
@@ -88,32 +92,41 @@ public class UserServiceImpl implements UserService {
         user.setBonuses(refreshedBonusesAmount);
 
         user.addTare(tare);
-        return userRepository.save(user);
+        final User updatedUser = userRepository.save(user);
+        return userMapper.mapToUserResponse(updatedUser);
     }
 
     @Override
-    public Coupon useCoupon(final UUID userId, final UUID couponId) {
-        final User user = getById(userId);
+    public UserResponseDto useCoupon(final UUID userId, final UUID couponId) {
+        final User user = getUserById(userId);
         final Coupon coupon = user.getCoupons().stream()
                 .filter(userCoupon -> userCoupon.getId().equals(couponId))
                 .findFirst()
                 .orElseThrow(() -> new CouponServiceException("You hadn't bought this coupon"));
         user.removeCoupon(coupon);
-        userRepository.save(user);
-        return coupon;
+        final User updatedUser = userRepository.save(user);
+        return userMapper.mapToUserResponse(updatedUser);
     }
 
     @Override
-    public User getById(final UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserServiceException("User doesn't exist"));
+    public UserResponseDto getById(final UUID id) {
+        final User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserServiceException("User doesn't exist"));
+        return userMapper.mapToUserResponse(user);
     }
 
-    private Coupon buyCouponByUser(final User user, final Coupon coupon, final Integer userBonuses, final Integer couponCost) {
+    private UserResponseDto buyCouponByUser(final User user, final Coupon coupon, final Integer userBonuses, final Integer couponCost) {
         final Integer accountBalance = userBonuses - couponCost;
         user.setBonuses(accountBalance);
 
         user.addCoupon(coupon);
         userRepository.save(user);
-        return coupon;
+        final User updatedUser = userRepository.save(user);
+        return userMapper.mapToUserResponse(updatedUser);
+    }
+
+    private User getUserById(final UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserServiceException("User doesn't exist"));
     }
 }

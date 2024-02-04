@@ -2,6 +2,7 @@ package by.itacademy.services.coupon;
 
 import by.itacademy.dto.request.CreateCouponRequestDto;
 import by.itacademy.dto.request.UpdateCouponRequestDto;
+import by.itacademy.dto.response.CouponResponseDto;
 import by.itacademy.entities.Coupon;
 import by.itacademy.mappers.CouponMapper;
 import by.itacademy.repositories.coupon.CouponRepository;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
@@ -20,21 +23,26 @@ public class CouponServiceImpl implements CouponService {
     private final CouponMapper couponMapper;
 
     @Override
-    public Coupon saveCoupon(final CreateCouponRequestDto couponRequestDto) {
+    public CouponResponseDto saveCoupon(final CreateCouponRequestDto couponRequestDto) {
         final Coupon coupon = couponMapper.mapToCoupon(couponRequestDto);
-        return couponRepository.save(coupon);
+        final Coupon savedCoupon = couponRepository.save(coupon);
+        return couponMapper.mapToCouponResponse(savedCoupon);
     }
 
     @Override
-    public List<Coupon> readCoupons() {
-        return couponRepository.findAll();
+    public List<CouponResponseDto> readCoupons() {
+        return couponRepository.findAll().stream()
+                .map(couponMapper::mapToCouponResponse)
+                .collect(toList());
     }
 
     @Override
-    public Coupon updateCoupon(final UUID id, final UpdateCouponRequestDto couponRequestDto) {
-        final Coupon couponToUpdate = getCouponById(id);
+    public CouponResponseDto updateCoupon(final UUID id, final UpdateCouponRequestDto couponRequestDto) {
+        final Coupon couponToUpdate = couponRepository.findById(id)
+                .orElseThrow(() -> new CouponServiceException("You can't update this coupon"));
         couponMapper.updateCoupon(couponRequestDto, couponToUpdate);
-        return couponRepository.save(couponToUpdate);
+        final Coupon updatedCoupon = couponRepository.save(couponToUpdate);
+        return couponMapper.mapToCouponResponse(updatedCoupon);
     }
 
     @Override
@@ -43,18 +51,28 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Coupon getCouponById(final UUID id) {
-        return couponRepository.findById(id).orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
+    public CouponResponseDto getById(final UUID id) {
+        final Coupon coupon = couponRepository.findById(id)
+                .orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
+        return couponMapper.mapToCouponResponse(coupon);
     }
 
-//    @Override
+    //    @Override
 //    public List<Coupon> getCouponsByUserId(final UUID id) {
 //
 //        return couponRepository.findCouponsByUsers(userId);
 //    }
 //
     @Override
-    public List<Coupon> getCouponsByCompanyId(final UUID companyId) {
-        return couponRepository.findCouponsByCompanyId(companyId);
+    public List<CouponResponseDto> getCouponsByCompanyId(final UUID companyId) {
+        return couponRepository.findCouponsByCompanyId(companyId).stream()
+                .map(couponMapper::mapToCouponResponse)
+                .collect(toList());
+    }
+
+    @Override
+    public Coupon getCouponById(final UUID id) {
+        return couponRepository.findById(id)
+                .orElseThrow(() -> new CouponServiceException("This coupon doesn't exist"));
     }
 }

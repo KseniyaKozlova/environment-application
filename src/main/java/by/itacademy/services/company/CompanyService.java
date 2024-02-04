@@ -2,7 +2,7 @@ package by.itacademy.services.company;
 
 import by.itacademy.dto.request.CreateCompanyRequestDto;
 import by.itacademy.dto.request.UpdateCompanyRequestDto;
-import by.itacademy.entities.Company;
+import by.itacademy.dto.response.CompanyResponseDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,13 +12,13 @@ import java.util.UUID;
  */
 public interface CompanyService {
 
-    Company saveCompany(CreateCompanyRequestDto companyRequestDto);
+    CompanyResponseDto saveCompany(CreateCompanyRequestDto companyRequestDto);
 
-    Company getCompanyById(UUID id);
+    CompanyResponseDto getCompanyById(UUID id);
 
-    List<Company> readCompanies();
+    List<CompanyResponseDto> readCompanies();
 
-    Company updateCompany(UUID id, UpdateCompanyRequestDto companyRequestDto);
+    CompanyResponseDto updateCompany(UUID id, UpdateCompanyRequestDto companyRequestDto);
 
     void deleteCompany(UUID id);
 }

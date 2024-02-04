@@ -2,10 +2,10 @@ package by.itacademy.controllers.tare;
 
 import by.itacademy.dto.request.CreateTareRequestDto;
 import by.itacademy.dto.request.UpdateTareRequestDto;
-import by.itacademy.entities.Tare;
+import by.itacademy.dto.response.TareResponseDto;
+import by.itacademy.services.tare.TareService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import by.itacademy.services.tare.TareService;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,17 +18,17 @@ public class TareController {
     private final TareService tareService;
 
     @PostMapping(path = "/tare")
-    public Tare saveTare(@RequestBody CreateTareRequestDto tareRequestDto) {
+    public TareResponseDto saveTare(@RequestBody CreateTareRequestDto tareRequestDto) {
         return tareService.saveTare(tareRequestDto);
     }
 
     @GetMapping(path = "/tare/{id}")
-    public Tare getTareById(@PathVariable UUID id) {
-        return tareService.getTareById(id);
+    public TareResponseDto getTareById(@PathVariable UUID id) {
+        return tareService.getById(id);
     }
 
     @GetMapping(path = "/tares")
-    public List<Tare> getAllTares() {
+    public List<TareResponseDto> getAllTares() {
         return tareService.readTares();
     }
 
@@ -38,7 +38,7 @@ public class TareController {
 //    }
 
     @PutMapping(path = "/tare/updateTare/{id}")
-    public Tare updateTare(@PathVariable UUID id, @RequestBody UpdateTareRequestDto tareRequestDto) {
+    public TareResponseDto updateTare(@PathVariable UUID id, @RequestBody UpdateTareRequestDto tareRequestDto) {
         return tareService.updateTare(id, tareRequestDto);
     }
 
