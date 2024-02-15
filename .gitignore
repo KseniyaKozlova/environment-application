@@ -18,6 +18,3 @@
 # Maven
 log/
 target/
-
-# Tests
-test/
