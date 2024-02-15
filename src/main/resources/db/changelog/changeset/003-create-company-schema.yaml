@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 003-create-company-schema
+        author: Kseniya Kozlova
+        changes:
+          - createTable:
+              tableName: company
+              columns:
+                - column:
+                    name: id
+                    type: UUID
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                - column:
+                    name: company_name
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                - column:
+                    name: details
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+
+          - sql: ALTER TABLE company ALTER COLUMN id SET DEFAULT gen_random_uuid()

@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 001-create-users-schema
+        author: Kseniya Kozlova
+        changes:
+          - createTable:
+              tableName: person
+              columns:
+                - column:
+                    name: id
+                    type: UUID
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                - column:
+                    name: login
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                      unique: true
+                - column:
+                    name: password
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                - column:
+                    name: name
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                - column:
+                    name: bonuses
+                    type: INT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: role
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+
+          - sql: ALTER TABLE person ALTER COLUMN id SET DEFAULT gen_random_uuid()

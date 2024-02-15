@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 005-create-coupon-schema
+        author: Kseniya Kozlova
+        changes:
+          - createTable:
+              tableName: coupon
+              columns:
+                - column:
+                    name: id
+                    type: UUID
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                - column:
+                    name: cost
+                    type: INT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: description
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                - column:
+                    name: company_id
+                    type: UUID
+                    constraints:
+                      nullable: false
+
+          - sql: ALTER TABLE coupon ALTER COLUMN id SET DEFAULT gen_random_uuid()
+
+          - addForeignKeyConstraint:
+              baseTableName: coupon
+              baseColumnNames: company_id
+              referencedTableName: company
+              referencedColumnNames: id
+              constraintName: company_coupon_fk

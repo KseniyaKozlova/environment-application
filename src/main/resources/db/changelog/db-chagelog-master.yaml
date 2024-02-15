@@ -1,0 +1,21 @@
+databaseChangeLog: #параметр в котором находятся миграции
+  - include: # список активных миграций
+      file: db/changelog/changeset/001-create-person-schema.yaml # путь к файлу миграции
+  - include:
+      file: db/changelog/changeset/002-fill-users-table.yaml
+  - include:
+      file: db/changelog/changeset/003-create-company-schema.yaml
+  - include:
+      file: db/changelog/changeset/004-fill-company-table.yaml
+  - include:
+      file: db/changelog/changeset/005-create-coupon-schema.yaml
+  - include:
+      file: db/changelog/changeset/006-fill-coupon-table.yaml
+  - include:
+      file: db/changelog/changeset/007-create-tare-schema.yaml
+  - include:
+      file: db/changelog/changeset/008-fill-tare-table.yaml
+  - include:
+      file: db/changelog/changeset/009-create-person-coupon-schema.yaml
+  - include:
+      file: db/changelog/changeset/010-create-person-tare-schema.yaml
