@@ -1,29 +1,22 @@
 package by.itacademy.dto.request;
 
 import by.itacademy.enums.Role;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Builder;
 import lombok.Data;
 
 import static by.itacademy.util.Constants.EMAIL_REGEX;
 import static by.itacademy.util.Constants.PASSWORD_REGEX;
 
 @Data
-@Builder
-public class CreateUserRequestDto {
+public class UpdateUserRequestDto {
 
-    @NotNull
     @Pattern(regexp = EMAIL_REGEX)
     private String login;
 
-    @NotNull
     @Pattern(regexp = PASSWORD_REGEX)
     private String password;
 
-    @NotBlank
     private String name;
 
     @PositiveOrZero
