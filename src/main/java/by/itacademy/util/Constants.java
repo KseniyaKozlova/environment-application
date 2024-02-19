@@ -59,10 +59,10 @@ public class Constants {
     public static final String SAVE_USER_URL = "/user";
     public static final String UPDATE_USER_URL = "/user/{id}";
     public static final String DELETE_USER_URL = "/user/{id}";
-    public static final String DEPOSIT_TARE_BY_USER_URL = "/user/{userId}/deposit_tare/{tareId}";
+    public static final String DEPOSIT_TARE_BY_USER_URL = "/user/{userId}/tare/{tareId}";
     public static final String BUY_COUPON_BY_USER_URL = "/user/{userId}/coupon/{couponId}";
     public static final String USE_COUPON_BY_USER_URL = "/user/{userId}/coupon/{couponId}/without_bonuses_back";
-    public static final String RETURN_COUPON_BY_USER_URL = "/user/{userId}/return_coupon/{couponId}/with_bonuses_back";
+    public static final String RETURN_COUPON_BY_USER_URL = "/user/{userId}/coupon/{couponId}/with_bonuses_back";
 
     /**
      * Regex
