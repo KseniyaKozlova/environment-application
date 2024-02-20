@@ -5,7 +5,7 @@ databaseChangeLog:
         changes:
           - createTable:
               tableName: person_coupon
-              remarks: A join table between users and coupons
+              remarks: Join table between users and coupons
               columns:
                 - column:
                     name: person_id

@@ -17,5 +17,3 @@ databaseChangeLog: #параметр в котором находятся миг
       file: db/changelog/changeset/008-fill-tare-table.yaml
   - include:
       file: db/changelog/changeset/009-create-person-coupon-schema.yaml
-  - include:
-      file: db/changelog/changeset/010-create-person-tare-schema.yaml

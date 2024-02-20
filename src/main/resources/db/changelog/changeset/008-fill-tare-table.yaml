@@ -7,7 +7,7 @@ databaseChangeLog:
               tableName: tare
               columns:
                 - column:
-                    name: bonuses_to_accounting
+                    name: accounting_bonuses_count
                     value: 25
                 - column:
                     name: litres_volume
@@ -20,7 +20,7 @@ databaseChangeLog:
               tableName: tare
               columns:
                 - column:
-                    name: bonuses_to_accounting
+                    name: accounting_bonuses_count
                     value: 15
                 - column:
                     name: litres_volume

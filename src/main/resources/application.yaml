@@ -16,3 +16,5 @@ services:
   external:
     addresses:
       url: http://localhost:8081/api/version1
+    bonuses-count:
+      url: http://localhost:8083/api/version1

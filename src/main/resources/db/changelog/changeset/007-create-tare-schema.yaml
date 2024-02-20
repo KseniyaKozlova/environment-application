@@ -13,13 +13,13 @@ databaseChangeLog:
                       nullable: false
                       primaryKey: true
                 - column:
-                    name: bonuses_to_accounting
+                    name: accounting_bonuses_count
                     type: INT
                     constraints:
                       nullable: false
                 - column:
                     name: litres_volume
-                    type: FLOAT
+                    type: DECIMAL
                     constraints:
                       nullable: false
                 - column:
@@ -27,5 +27,15 @@ databaseChangeLog:
                     type: VARCHAR
                     constraints:
                       nullable: false
+                - column:
+                    name: person_id
+                    type: UUID
 
           - sql: ALTER TABLE tare ALTER COLUMN id SET DEFAULT gen_random_uuid()
+
+          - addForeignKeyConstraint:
+              baseTableName: tare
+              baseColumnNames: person_id
+              referencedTableName: person
+              referencedColumnNames: id
+              constraintName: tare_user_fk

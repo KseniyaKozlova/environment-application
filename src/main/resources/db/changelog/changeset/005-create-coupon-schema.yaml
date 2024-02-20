@@ -35,4 +35,4 @@ databaseChangeLog:
               baseColumnNames: company_id
               referencedTableName: company
               referencedColumnNames: id
-              constraintName: company_coupon_fk
+              constraintName: coupon_company_fk
