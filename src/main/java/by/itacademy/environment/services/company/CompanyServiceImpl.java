@@ -36,9 +36,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional(readOnly = true)
     public CompanyResponseDto getCompanyResponseById(final UUID id) {
-        final Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(id.toString()));
-
+        final Company company = getCompanyById(id);
         final CompanyResponseDto companyResponseDto = companyMapper.mapToCompanyResponse(company);
         final List<AddressResponseDto> companyAddresses = addressClient.getCompanyAddress(company.getCompanyName());
         companyResponseDto.setAddresses(companyAddresses);
@@ -56,9 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     @Transactional
     public CompanyResponseDto updateCompany(final UUID id, final UpdateCompanyRequestDto companyRequestDto) {
-        final Company companyToUpdate = companyRepository.findById(id)
-                .orElseThrow(() -> new CompanyNotFoundException(id.toString()));
-
+        final Company companyToUpdate = getCompanyById(id);
         companyMapper.updateCompany(companyRequestDto, companyToUpdate);
         final Company updatedCompany = companyRepository.save(companyToUpdate);
         return companyMapper.mapToCompanyResponse(updatedCompany);

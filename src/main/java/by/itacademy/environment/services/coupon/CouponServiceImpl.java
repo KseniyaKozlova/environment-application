@@ -56,8 +56,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     @Transactional
     public CouponResponseDto updateCoupon(final UUID id, final UpdateCouponRequestDto couponRequestDto) {
-        final Coupon couponToUpdate = couponRepository.findById(id)
-                .orElseThrow(() -> new CouponNotFoundException(id.toString()));
+        final Coupon couponToUpdate = getCouponById(id);
         couponMapper.updateCoupon(couponRequestDto, couponToUpdate);
         final Coupon updatedCoupon = couponRepository.save(couponToUpdate);
         return couponMapper.mapToCouponResponse(updatedCoupon);

@@ -38,10 +38,8 @@ public class TareServiceImpl implements TareService {
         final Integer bonusesCount = bonusesCountResponse.getAccountingBonusesCount();
         tare.setAccountingBonusesCount(bonusesCount);
 
-        if (tareRequestDto.getUserId() != null) {
-            final User user = userService.getUserById(tareRequestDto.getUserId());
-            user.addTare(tare);
-        }
+        final User user = userService.getUserById(tareRequestDto.getUserId());
+        user.addTare(tare);
         final Tare savedTare = tareRepository.save(tare);
         return tareMapper.mapToTareResponse(savedTare);
     }

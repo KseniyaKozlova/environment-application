@@ -1,5 +1,6 @@
 package by.itacademy.environment.services;
 
+import by.itacademy.environment.dto.request.CreateCompanyRequestDto;
 import by.itacademy.environment.dto.request.UpdateCompanyRequestDto;
 import by.itacademy.environment.dto.response.CompanyResponseDto;
 import by.itacademy.environment.entities.Company;
@@ -72,27 +73,27 @@ public class CompanyServiceImplTest {
         companyServiceImpl = new CompanyServiceImpl(mockCompanyRepository, mockCompanyMapper, mockAddressClient);
     }
 
-//    @Test
-//    void saveCompanyTest_successful() {
-//        final CreateCompanyRequestDto companyRequestDto = CreateCompanyRequestDto.builder()
-//                .companyName("Sosedi")
-//                .details("UN: 40003415")
-//                .build();
-//
-//        doReturn(COMPANY_1).when(mockCompanyMapper).mapToCompany(companyRequestDto);
-//        doReturn(SAVED_COMPANY_1).when(mockCompanyRepository).save(COMPANY_1);
-//        doReturn(COMPANY_RESPONSE_DTO_1).when(mockCompanyMapper).mapToCompanyResponse(SAVED_COMPANY_1);
-//
-//        final var expected = companyServiceImpl.saveCompany(companyRequestDto);
-//
-//        assertEquals(expected, COMPANY_RESPONSE_DTO_1);
-//        verify(mockCompanyMapper).mapToCompany(companyRequestDto);
-//        verify(mockCompanyRepository).save(COMPANY_1);
-//        verify(mockCompanyMapper).mapToCompanyResponse(SAVED_COMPANY_1);
-//
-//        verifyNoMoreInteractions(mockCompanyMapper);
-//        verifyNoMoreInteractions(mockCompanyRepository);
-//    } // TODO
+    @Test
+    void saveCompanyTest_successful() {
+        final CreateCompanyRequestDto companyRequestDto = CreateCompanyRequestDto.builder()
+                .companyName("Sosedi")
+                .details("UN: 40003415")
+                .build();
+
+        doReturn(COMPANY_1).when(mockCompanyMapper).mapToCompany(companyRequestDto);
+        doReturn(SAVED_COMPANY_1).when(mockCompanyRepository).save(COMPANY_1);
+        doReturn(COMPANY_RESPONSE_DTO_1).when(mockCompanyMapper).mapToCompanyResponse(SAVED_COMPANY_1);
+
+        final var expected = companyServiceImpl.saveCompany(companyRequestDto);
+
+        assertEquals(expected, COMPANY_RESPONSE_DTO_1);
+        verify(mockCompanyMapper).mapToCompany(companyRequestDto);
+        verify(mockCompanyRepository).save(COMPANY_1);
+        verify(mockCompanyMapper).mapToCompanyResponse(SAVED_COMPANY_1);
+
+        verifyNoMoreInteractions(mockCompanyMapper);
+        verifyNoMoreInteractions(mockCompanyRepository);
+    }
 
     @Test
     void readCouponsTest_successful() {

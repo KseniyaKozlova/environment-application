@@ -1,7 +1,11 @@
 package by.itacademy.environment.services;
 
+import by.itacademy.environment.dto.request.CreateTareRequestDto;
+import by.itacademy.environment.dto.response.BonusesCountResponseDto;
 import by.itacademy.environment.dto.response.TareResponseDto;
 import by.itacademy.environment.entities.Tare;
+import by.itacademy.environment.entities.User;
+import by.itacademy.environment.enums.Role;
 import by.itacademy.environment.enums.TareCategory;
 import by.itacademy.environment.feignClients.TareBonusesCountClient;
 import by.itacademy.environment.mappers.TareMapper;
@@ -16,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,12 +46,6 @@ public class TareServiceImplTest {
             .tareCategory(TareCategory.GLASS_BOTTLE)
             .litresVolume(BigDecimal.valueOf(0.5))
             .accountingBonusesCount(30)
-            .build();
-
-    private static final Tare TARE_1 = Tare.builder()
-            .tareCategory(TareCategory.PLASTIC_BOTTLE)
-            .litresVolume(BigDecimal.valueOf(0.5))
-            .accountingBonusesCount(10)
             .build();
 
     private static final Tare SAVED_TARE_2 = Tare.builder()
@@ -78,38 +77,68 @@ public class TareServiceImplTest {
         tareServiceImpl = new TareServiceImpl(mockBonusesCountClient, mockUserService, mockTareRepository, mockTareMapper);
     }
 
-//    @Test
-//    void saveTareTest_successful() {
-//        final CreateTareRequestDto tareRequestDto = CreateTareRequestDto.builder()
-//                .tareCategory(TareCategory.PLASTIC_BOTTLE)
-//                .litresVolume(BigDecimal.valueOf(0.5))
-//                .userId(USER_ID)
-//                .build();
-//
-//        final User user = User.builder()
-//                .id(USER_ID)
-//                .login("armail@master.by")
-//                .password("Assdssa")
-//                .name("Armail")
-//                .role(Role.CONSUMER).build();
-//
-//        doReturn(TARE_1).when(mockTareMapper).mapToTare(tareRequestDto);
-//        doReturn(user).when(mockUserService).getUserById(USER_ID);
-//        doReturn(SAVED_TARE_1).when(mockTareRepository).save(TARE_1);
-//        doReturn(TARE_RESPONSE_DTO_1).when(mockTareMapper).mapToTareResponse(SAVED_TARE_1);
-//
-//        final var expected = tareServiceImpl.saveTare(tareRequestDto);
-//
-//        assertEquals(expected, TARE_RESPONSE_DTO_1);
-//        verify(mockTareMapper).mapToTare(tareRequestDto);
-//        verify(mockUserService).getUserById(USER_ID);
-//        verify(mockTareRepository).save(TARE_1);
-//        verify(mockTareMapper).mapToTareResponse(SAVED_TARE_1);
-//
-//        verifyNoMoreInteractions(mockTareMapper);
-//        verifyNoMoreInteractions(mockUserService);
-//        verifyNoMoreInteractions(mockTareRepository);
-//    } //TODO
+    @Test
+    void saveTareTest_successful() {
+        final CreateTareRequestDto tareRequestDto = CreateTareRequestDto.builder()
+                .tareCategory(TareCategory.PLASTIC_BOTTLE)
+                .litresVolume(BigDecimal.valueOf(0.5))
+                .userId(USER_ID)
+                .build();
+
+        final User user = User.builder()
+                .id(USER_ID)
+                .login("armail@master.by")
+                .password("Assdssa")
+                .name("Armail")
+                .bonuses(0)
+                .role(Role.CONSUMER)
+                .tares(new ArrayList<>())
+                .build();
+
+        final Tare tare = Tare.builder()
+                .tareCategory(TareCategory.PLASTIC_BOTTLE)
+                .litresVolume(BigDecimal.valueOf(0.5))
+                .build();
+
+        final BonusesCountResponseDto bonusesCountResponseDto = BonusesCountResponseDto.builder()
+                .accountingBonusesCount(10)
+                .build();
+
+        final Tare tareWithoutId = Tare.builder()
+                .tareCategory(TareCategory.PLASTIC_BOTTLE)
+                .litresVolume(BigDecimal.valueOf(0.5))
+                .accountingBonusesCount(10)
+                .user(user)
+                .build();
+
+        final Tare savedTare = Tare.builder()
+                .tareCategory(TareCategory.PLASTIC_BOTTLE)
+                .litresVolume(BigDecimal.valueOf(0.5))
+                .accountingBonusesCount(10)
+                .user(user)
+                .build();
+
+        doReturn(tare).when(mockTareMapper).mapToTare(tareRequestDto);
+        doReturn(bonusesCountResponseDto).when(mockBonusesCountClient).getBonusesCount(BigDecimal.valueOf(0.5),
+                TareCategory.PLASTIC_BOTTLE);
+        doReturn(user).when(mockUserService).getUserById(USER_ID);
+        doReturn(savedTare).when(mockTareRepository).save(tareWithoutId);
+        doReturn(TARE_RESPONSE_DTO_1).when(mockTareMapper).mapToTareResponse(tareWithoutId);
+
+        final var expected = tareServiceImpl.saveTare(tareRequestDto);
+
+        assertEquals(expected, TARE_RESPONSE_DTO_1);
+        verify(mockTareMapper).mapToTare(tareRequestDto);
+        verify(mockBonusesCountClient).getBonusesCount(BigDecimal.valueOf(0.5), TareCategory.PLASTIC_BOTTLE);
+        verify(mockUserService).getUserById(USER_ID);
+        verify(mockTareRepository).save(tareWithoutId);
+        verify(mockTareMapper).mapToTareResponse(tareWithoutId);
+
+        verifyNoMoreInteractions(mockTareMapper);
+        verifyNoMoreInteractions(mockBonusesCountClient);
+        verifyNoMoreInteractions(mockUserService);
+        verifyNoMoreInteractions(mockTareRepository);
+    }
 
     @Test
     void readTaresTest_successful() {

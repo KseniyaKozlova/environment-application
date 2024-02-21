@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDto returnCoupon(final UUID userId, final UUID couponId) {
         final User user = getUserById(userId);
         final Coupon coupon = getCoupon(couponId, userId);
