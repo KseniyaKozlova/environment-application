@@ -10,6 +10,10 @@ import java.math.BigDecimal;
 
 import static by.itacademy.environment.util.Constants.*;
 
+/**
+ * Receive Company addresses from Tare API
+ */
+
 @FeignClient(name = BONUSES_FEIGN_CLIENT_NAME, url = BONUSES_URL_PROPERTIES)
 public interface TareBonusesCountClient {
 

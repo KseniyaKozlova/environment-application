@@ -10,7 +10,7 @@ import java.util.List;
 import static by.itacademy.environment.util.Constants.*;
 
 /**
- * Receive Company addresses from localhost:8081
+ * Receive Company addresses from Company API
  */
 
 @FeignClient(value = ADDRESS_FEIGN_CLIENT_NAME, url = ADDRESSES_URL_PROPERTIES)

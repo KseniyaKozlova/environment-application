@@ -28,7 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     public CompanyResponseDto saveCompany(final CreateCompanyRequestDto companyRequestDto) {
         final Company company = companyMapper.mapToCompany(companyRequestDto);
-        company.getCoupons().forEach(company::addCoupon);
+        company.getCoupons().forEach(coupon -> coupon.setCompany(company));
         final Company savedCompany = companyRepository.save(company);
         return companyMapper.mapToCompanyResponse(savedCompany);
     }

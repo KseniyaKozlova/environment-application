@@ -28,8 +28,8 @@ public class Constants {
     /**
      * URL parts
      */
-    public static final String API_URL = "/api/version1";
-    public static final String COUPON_PROCESSING_API_URL = "/api/version1/coupon_processing";
+    public static final String API_URL = "/api/v1";
+    public static final String COUPON_PROCESSING_API_URL = "/api/v1/coupon_processing";
     public static final String GET_ADDRESSES_URL = "/address/{name}";
     public static final String GET_BONUSES_COUNT_URL = "/bonuses_count/category/{tare_category}/volume/{tare_volume}";
 
@@ -67,6 +67,7 @@ public class Constants {
     /**
      * Regex
      */
+    public static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
     public static final String EMAIL_REGEX = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final String PASSWORD_REGEX = "^.{7,10}$";
 
@@ -85,7 +86,7 @@ public class Constants {
      * Internationalization
      */
     public static final String INTERNATIONALIZATION_RESOURCE = "classpath:messages";
-    public static final String ENCODING = "UTF-8";
+    public static final String ENCODING = "windows-1251";
     public static final String MISSING_COMPANY_MESSAGE = "missing.company.message";
     public static final String MISSING_COUPON_MESSAGE = "missing.coupon.message";
     public static final String MISSING_TARE_MESSAGE = "missing.tare.message";
@@ -101,6 +102,11 @@ public class Constants {
     public static final String DEFAULT_BONUSES_EXCEPTION_MESSAGE = "Not enough bonuses to buy coupon";
     public static final String DEFAULT_USER_COUPON_EXCEPTION_MESSAGE = "Unavailable coupon for user";
     public static final String DEFAULT_LOGIN_EXCEPTION_MESSAGE = "Entered existing login";
+
+    /**
+     * Messages
+     */
+    public static final String OBJECT_NOT_VALID_MESSAGE = "At least one field should present";
 
     /**
      * Table names
@@ -155,5 +161,5 @@ public class Constants {
     /**
      * Numbers
      */
-    public static final Integer MIN_ACCOUNTING_BONUSES_COUNT = 0;
+    public static final Integer MIN_BONUSES_COUNT = 0;
 }

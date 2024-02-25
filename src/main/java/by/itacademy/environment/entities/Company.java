@@ -34,7 +34,7 @@ public class Company {
     @Column(name = DETAILS, nullable = false)
     private String details;
 
-    @OneToMany(mappedBy = COMPANY_REFERENCE, orphanRemoval = true, cascade = ALL)
+    @OneToMany(mappedBy = COMPANY_REFERENCE, cascade = ALL)
     private List<Coupon> coupons;
 
     public void addCoupon(final Coupon coupon) {

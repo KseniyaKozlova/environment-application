@@ -3,7 +3,10 @@ package by.itacademy.environment.entities;
 import by.itacademy.environment.enums.Role;
 import by.itacademy.environment.exceptions.InsufficientBonusesException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +56,7 @@ public class User {
 
     public void addCoupon(final Coupon coupon) {
         final boolean isBonusesEnough =
-                (this.bonuses - coupon.getCost()) >= MIN_ACCOUNTING_BONUSES_COUNT;
+                (this.bonuses - coupon.getCost()) >= MIN_BONUSES_COUNT;
 
         if (isBonusesEnough) {
             this.coupons.add(coupon);

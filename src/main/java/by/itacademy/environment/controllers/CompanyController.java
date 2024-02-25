@@ -38,7 +38,7 @@ public class CompanyController {
     }
 
     @PutMapping(path = UPDATE_COMPANY_URL)
-    public CompanyResponseDto updateCompany(@PathVariable(value = ID) UUID id, @RequestBody UpdateCompanyRequestDto companyRequestDto) {
+    public CompanyResponseDto updateCompany(@PathVariable(value = ID) UUID id, @RequestBody @Valid UpdateCompanyRequestDto companyRequestDto) {
         return companyService.updateCompany(id, companyRequestDto);
     }
 

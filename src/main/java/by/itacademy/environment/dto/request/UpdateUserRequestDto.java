@@ -1,5 +1,6 @@
 package by.itacademy.environment.dto.request;
 
+import by.itacademy.environment.annotations.AtLeastOneFieldPresent;
 import by.itacademy.environment.enums.Role;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -15,6 +16,7 @@ import static by.itacademy.environment.util.Constants.PASSWORD_REGEX;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@AtLeastOneFieldPresent
 public class UpdateUserRequestDto {
 
     @Pattern(regexp = EMAIL_REGEX)

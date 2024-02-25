@@ -38,7 +38,7 @@ public class UserController {
 
     @PutMapping(path = UPDATE_USER_URL)
     public UserResponseDto updateUser(@PathVariable(value = ID) UUID id,
-                                      @RequestBody UpdateUserRequestDto userRequestDto) {
+                                      @RequestBody @Valid UpdateUserRequestDto userRequestDto) {
         return userService.updateUser(id, userRequestDto);
     }
 

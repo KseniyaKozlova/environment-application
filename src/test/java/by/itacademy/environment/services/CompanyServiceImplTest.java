@@ -152,10 +152,10 @@ public class CompanyServiceImplTest {
 
         doReturn(Optional.ofNullable(SAVED_COMPANY_1)).when(mockCompanyRepository).findById(COMPANY_ID);
         doAnswer(invocationOnMock
-                        -> invocationOnMock
-                        .getArgument(1, Company.class)
-                        .setCompanyName("Sosedi++")
-                        .setDetails("UN: 40008989"))
+                -> invocationOnMock
+                .getArgument(1, Company.class)
+                .setCompanyName("Sosedi++")
+                .setDetails("UN: 40008989"))
                 .when(mockCompanyMapper)
                 .updateCompany(companyRequestDto, SAVED_COMPANY_1);
         doReturn(updatedCompany1).when(mockCompanyRepository).save(updatedCompany1);

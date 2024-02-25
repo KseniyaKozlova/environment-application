@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponseDto saveUser(CreateUserRequestDto userRequestDto) {
+    public UserResponseDto saveUser(final CreateUserRequestDto userRequestDto) {
         final User user = userMapper.mapToUser(userRequestDto);
         final User savedUser = userRepository.save(user);
         return userMapper.mapToUserResponse(savedUser);
@@ -45,6 +46,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(final UUID id) {
+        final User user = getUserById(id);
+        final List<Coupon> coupons = user.getCoupons();
+        coupons.forEach(coupon -> coupon.getUsers().remove(user));
         userRepository.deleteById(id);
     }
 
