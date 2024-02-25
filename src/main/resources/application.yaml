@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/environment
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+
+  liquibase:
+    change-log: classpath:db/changelog/db-chagelog-master.yaml
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+services:
+  external:
+    addresses:
+      url: http://localhost:8081/api/version1
+    bonuses-count:
+      url: http://localhost:8083/api/version1

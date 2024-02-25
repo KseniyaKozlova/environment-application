@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 008-fill-tare-table
+        author: Kseniya Kozlova
+        changes:
+          - insert:
+              tableName: tare
+              columns:
+                - column:
+                    name: accounting_bonuses_count
+                    value: 25
+                - column:
+                    name: litres_volume
+                    value: 0.5
+                - column:
+                    name: tare_category
+                    value: GLASS_BOTTLE
+
+          - insert:
+              tableName: tare
+              columns:
+                - column:
+                    name: accounting_bonuses_count
+                    value: 15
+                - column:
+                    name: litres_volume
+                    value: 1.0
+                - column:
+                    name: tare_category
+                    value: PLASTIC_BOTTLE

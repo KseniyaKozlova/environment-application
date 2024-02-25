@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 002-fill-person-table
+        author: Kseniya Kozlova
+        changes:
+          - insert:
+              tableName: person
+              columns:
+                - column:
+                    name: login
+                    value: usernick@mail.ru
+                - column:
+                    name: password
+                    value: ZXaaa-14
+                - column:
+                    name: name
+                    value: Nick
+                - column:
+                    name: bonuses
+                    value: 30
+                - column:
+                    name: role
+                    value: CONSUMER

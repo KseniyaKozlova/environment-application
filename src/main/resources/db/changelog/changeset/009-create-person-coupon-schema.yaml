@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 009-create-person-coupon-schema
+        author: Kseniya Kozlova
+        changes:
+          - createTable:
+              tableName: person_coupon
+              remarks: Join table between users and coupons
+              columns:
+                - column:
+                    name: person_id
+                    type: UUID
+                - column:
+                    name: coupon_id
+                    type: UUID
+
+          - addForeignKeyConstraint:
+              baseTableName: person_coupon
+              baseColumnNames: person_id
+              referencedTableName: person
+              referencedColumnNames: id
+              constraintName: person_id_fk
+
+          - addForeignKeyConstraint:
+              baseTableName: person_coupon
+              baseColumnNames: coupon_id
+              referencedTableName: coupon
+              referencedColumnNames: id
+              constraintName: coupon_id_fk

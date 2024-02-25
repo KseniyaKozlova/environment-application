@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 006-fill-coupon-table
+        author: Kseniya Kozlova
+        changes:
+          - insert:
+              tableName: coupon
+              columns:
+                - column:
+                    name: cost
+                    value: 30
+                - column:
+                    name: description
+                    value: -3% when buy more than 150 rubles
+                - column:
+                    name: company_id
+                    valueComputed: (SELECT id FROM company WHERE company_name = 'Burvin')
+
+          - insert:
+              tableName: coupon
+              columns:
+                - column:
+                    name: cost
+                    value: 10
+                - column:
+                    name: description
+                    value: +3 rubles for discount card when buy more than 150 rubles
+                - column:
+                    name: company_id
+                    valueComputed: (SELECT id FROM company WHERE company_name = 'Burvin')

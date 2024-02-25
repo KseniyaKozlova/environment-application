@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 007-create-tare-schema
+        author: Kseniya Kozlova
+        changes:
+          - createTable:
+              tableName: tare
+              columns:
+                - column:
+                    name: id
+                    type: UUID
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                - column:
+                    name: accounting_bonuses_count
+                    type: INT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: litres_volume
+                    type: DECIMAL
+                    constraints:
+                      nullable: false
+                - column:
+                    name: tare_category
+                    type: VARCHAR
+                    constraints:
+                      nullable: false
+                - column:
+                    name: person_id
+                    type: UUID
+
+          - sql: ALTER TABLE tare ALTER COLUMN id SET DEFAULT gen_random_uuid()
+
+          - addForeignKeyConstraint:
+              baseTableName: tare
+              baseColumnNames: person_id
+              referencedTableName: person
+              referencedColumnNames: id
+              constraintName: tare_user_fk

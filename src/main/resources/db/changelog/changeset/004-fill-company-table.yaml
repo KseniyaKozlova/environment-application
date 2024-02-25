@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      - id: 004-fill-company-table
+        author: Kseniya Kozlova
+        changes:
+          - insert:
+              tableName: company
+              columns:
+                - column:
+                    name: company_name
+                    value: Burvin
+                - column:
+                    name: details
+                    value: UNN 40001723
